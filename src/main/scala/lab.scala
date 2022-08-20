@@ -7,12 +7,22 @@ import scala.collection.Iterator
 import scala.collection.immutable.IndexedSeq
 import munit.Clue.generate
 
-//enum Compared:
-  //case Lt
-
 enum List[+A]:
-  case Cons(c: List[A], t: A)
   case Nil
+  case Cons(c: List[A], t: A)
+  override def toString: String =
+    def rec(s: StringBuilder, a: List[A]): String =
+      a match
+        case Nil =>
+          s.append("]").result
+        case Cons(h, o) =>
+          rec(
+            s
+              .append(h)
+              .append(if o == Nil then "" else ", "),
+            o
+          )
+    rec(new StringBuilder("["), this)
  
 
 def map[A, B](xs: List[A], f: A => B): List[B] = {
@@ -21,13 +31,34 @@ def map[A, B](xs: List[A], f: A => B): List[B] = {
     case List.Nil => List.Nil
   }
 }
+
+def reverse: List[A] = {
+  def rec[A](list: List[A], reversed: List[A] = Nil): List[A] =
+    list match
+      case List.Nil => reversed
+      case List.Cons(t, c) => rec(c, List.Cons(t, reversed))
+
+  rec(this)
+}
+
+def getInits: List[List[A]] = {
+  def rec(list: List[A], inits: List[List[A]] = Nil): List[List[A]] =
+    list match
+      case List.Nil => inits
+      case List.Cons(t, c) =>
+        if inits != Nil then rec(c, List.Cons(List.Cons(t, inits.getHead), inits))
+        else rec(c, List.Cons(List.Cons(t, Nil), inits))
+
+  def rev(list: List[List[A]] = rec(this), reversed: List[List[A]] = Nil): List[List[A]] =
+    list match
+      case List.Nil => reversed
+      case List.Cons(t, c) => rev(c, List.Cons(t.reverse, reversed))
+
+  this match
+    case List.Nil => List(List())
+    case _ => rev()
+}
  object ListDemo {
-  def inits(xs: List[Int]): List[List[Int]] = {
-    var n = xs.length
-    var nl: List[List[Int]] = List(List())
-    for (x <- 1 to n) nl = xs.slice(0, x) :: nl
-    nl.reverse
-  }
 
    def scan(xs: List[Int], z: Int): List[Int] = {
      var n = xs.length
