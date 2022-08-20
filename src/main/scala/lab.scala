@@ -5,6 +5,7 @@ import scala.Unit
 import scala.IndexedSeq
 import scala.collection.Iterator
 import scala.collection.immutable.IndexedSeq
+import munit.Clue.generate
 
 //enum Compared:
   //case Lt
@@ -12,6 +13,7 @@ import scala.collection.immutable.IndexedSeq
 enum List[+A]:
   case Cons(c: List[A], t: A)
   case Nil
+ 
 
 def map[A, B](xs: List[A], f: A => B): List[B] = {
   xs match{
@@ -19,25 +21,26 @@ def map[A, B](xs: List[A], f: A => B): List[B] = {
     case List.Nil => List.Nil
   }
 }
-
-
-//функції нижче невдалі, але я про всяк випадок їх залишила, так, вони без сенсу для Вас, вибачте
-/* def inits[A](xs: List[A]): Iterator[List[A]] = {
-
-}
-
-def scan[A](xs: List[A], z: A, f: A => A): List[A] = {
-  xs match{
-    case List.Nil => List.Nil
-    case List.Cons(c, t) => List.Cons.scan("z")((c, t) => c + t)
+ object ListDemo {
+  def inits(xs: List[Int]): List[List[Int]] = {
+    var n = xs.length
+    var nl: List[List[Int]] = List(List())
+    for (x <- 1 to n) nl = xs.slice(0, x) :: nl
+    nl.reverse
   }
-}
 
-def minMax[A](xs: List[A], comparator: (A, A) => Compared): (A, A) = {
-  xs match{
+   def scan(xs: List[Int], z: Int): List[Int] = {
+     var n = xs.length
+     var nl: List[Int] = List()
+     nl=z::nl
+     for (x <- 0 to n-1) nl=(xs(x)+nl(0))::nl
+     nl.reverse
+   }
+ }
 
-  }
-} */
+//map = scan + inits
+
+
 
 
 @main def run() =
