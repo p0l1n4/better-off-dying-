@@ -38,11 +38,6 @@ def map[A, B](xs: List[A], f: A => B): List[B] = {
    }
  }
 
-//map = scan + inits
-
-
-
-
 @main def run() =
   println("Hello")
 
